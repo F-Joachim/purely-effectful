@@ -1,0 +1,23 @@
+name:                effectful-without-side-effects
+version:             0.1.0.0
+github:              "F-Joachim/effectful-without-side-effects"
+license:             BSD3
+author:              Joachim Friedrich
+maintainer:          "49515773+F-Joachim@users.noreply.github.com"
+copyright:           "2026 Joachim Friedrich"
+
+description:         A Haskell project for demonstrating effectful programming without side effects.
+language:            GHC2021
+
+dependencies:
+  - base >=4.7 && <5
+
+library:
+  source-dirs: src
+
+executables:
+  effectful-without-side-effects-exe:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+      - effectful-without-side-effects

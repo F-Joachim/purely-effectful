@@ -1,0 +1,42 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.39.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           effectful-without-side-effects
+version:        0.1.0.0
+description:    A Haskell project for demonstrating effectful programming without side effects.
+homepage:       https://github.com/F-Joachim/effectful-without-side-effects#readme
+bug-reports:    https://github.com/F-Joachim/effectful-without-side-effects/issues
+author:         Joachim Friedrich
+maintainer:     49515773+F-Joachim@users.noreply.github.com
+copyright:      2026 Joachim Friedrich
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/F-Joachim/effectful-without-side-effects
+
+library
+  exposed-modules:
+      Effectful
+  other-modules:
+      Paths_effectful_without_side_effects
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: GHC2021
+
+executable effectful-without-side-effects-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_effectful_without_side_effects
+  hs-source-dirs:
+      app
+  build-depends:
+      base >=4.7 && <5
+    , effectful-without-side-effects
+  default-language: GHC2021
