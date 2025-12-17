@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           effectful-without-side-effects
+name:           purely-effectful
 version:        0.1.0.0
-description:    A Haskell project for demonstrating effectful programming without side effects.
-homepage:       https://github.com/F-Joachim/effectful-without-side-effects#readme
-bug-reports:    https://github.com/F-Joachim/effectful-without-side-effects/issues
+description:    A Haskell project for demonstrating the Effectful library with Redis, Database, and Logging effects.
+homepage:       https://github.com/F-Joachim/purely-effectful#readme
+bug-reports:    https://github.com/F-Joachim/purely-effectful/issues
 author:         Joachim Friedrich
 maintainer:     49515773+F-Joachim@users.noreply.github.com
 copyright:      2026 Joachim Friedrich
@@ -17,26 +17,32 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/F-Joachim/effectful-without-side-effects
+  location: https://github.com/F-Joachim/purely-effectful
 
 library
   exposed-modules:
-      Effectful
+      EffectfulDemo
   other-modules:
-      Paths_effectful_without_side_effects
+      Paths_purely_effectful
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      base
+    , bytestring
+    , containers
+    , effectful
+    , effectful-core
+    , hedis
+    , text
   default-language: GHC2021
 
-executable effectful-without-side-effects-exe
+executable purely-effectful-exe
   main-is: Main.hs
   other-modules:
-      Paths_effectful_without_side_effects
+      Paths_purely_effectful
   hs-source-dirs:
       app
   build-depends:
       base >=4.7 && <5
-    , effectful-without-side-effects
+    , purely-effectful
   default-language: GHC2021

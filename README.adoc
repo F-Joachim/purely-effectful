@@ -1,0 +1,111 @@
+= Purely-Effectful
+:toc: left
+:source-highlighter: rouge
+:icons: font
+
+A demo Haskell project exploring the power of the `effectful` library. This project demonstrates how to manage external dependencies like Redis and Databases using high-performance, type-safe effects.
+
+== Why `effectful`?
+
+This project showcases the benefits of moving away from traditional `MTL` or complex `Free` monads toward the `effectful` ecosystem:
+
+* **Performance:** Uses the "ReaderT IO" pattern under the hood for near-native speed.
+* **Predictability:** Avoids the space leaks and cryptic error messages common in other effect libraries.
+* **Flexibility:** Easily swap between real-world IO (Redis/SQL) and pure in-memory mocks for testing.
+
+== Architecture
+
+The application is built using a **Hexagonal Architecture** (Ports and Adapters) pattern:
+
+1.  **Effects (Ports):** Abstract interfaces defined as GADTs (e.g., `Cache`, `Database`, `Logger`).
+2.  **Logic (Core):** Pure business logic that describes *what* should happen without knowing *how*.
+3.  **Interpreters (Adapters):** Concrete implementations that handle the effects (e.g., `runCacheRedis`, `runCachePure`).
+
+== Project Structure
+
+[source,text]
+----
+.
+├── app/
+│   └── Main.hs            # Entry point for the demo application
+├── src/
+│   └── PurelyEffectful/   # Core library code
+├── flake.lock             # Nix flake lock file
+├── flake.nix              # Nix flake for reproducible builds
+├── package.yaml           # Hpack configuration
+├── purely-effectful.cabal # Build configuration
+├── README.adoc            # Documentation
+├── stack.yaml             # Stack configuration
+└── stack.yaml.lock        # Stack lock file
+----
+
+== Getting Started
+
+=== Running the Demo
+
+*Prerequisites*: Ensure Redis is running if you want to use the Redis interpreter.
+
+[source,bash]
+----
+docker run -d -p 6379:6379 redis:8.4.0-bookworm
+----
+
+== How to run
+Using Stack:
+
+[source,shell]
+----
+stack build
+stack exec purely-effectful-exe
+----
+
+If using Nix (flake):
+
+[source,shell]
+----
+nix build
+./result/bin/purely-effectful-exe
+----
+
+Or with a Nix dev shell:
+
+[source,shell]
+----
+nix develop
+stack build
+stack exec purely-effectful-exe
+----
+
+== The Effects Stack
+
+The core logic uses a three-tier effect stack:
+
+[cols="1,2,2"]
+|===
+| Effect | Production Interpreter | Test/Mock Interpreter
+
+| `Logger`
+| Prints to standard output with timestamps.
+| `runLoggerNull` (Silent output).
+
+| `Cache`
+| Connects to **Redis** via the `hedis` library.
+| `runCachePure` (In-memory `Map`).
+
+| `Database`
+| Simulates SQL queries with artificial latency.
+| Hardcoded mock data.
+|===
+
+== Key Code Snippet
+
+The beauty of the system is visible in the business logic signature. It requires only the capabilities it actually uses:
+
+[source,haskell]
+----
+fetchUserData :: (Cache :> es, Database :> es, Logger :> es) => Text -> Eff es ()
+fetchUserData userId = do
+  send $ LogMsg Info ("Fetching: " <> userId)
+  -- Logic flow happens here...
+----
+

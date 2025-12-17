@@ -1,6 +1,6 @@
-module Main (main) where
+module Main(main) where
 
-import           Effectful                (run)
+import EffectfulDemo (runProgram)
 
 main :: IO ()
-main = run
+main = runProgram

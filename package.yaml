@@ -1,12 +1,12 @@
-name:                effectful-without-side-effects
+name:                purely-effectful
 version:             0.1.0.0
-github:              "F-Joachim/effectful-without-side-effects"
+github:              "F-Joachim/purely-effectful"
 license:             BSD3
 author:              Joachim Friedrich
 maintainer:          "49515773+F-Joachim@users.noreply.github.com"
 copyright:           "2026 Joachim Friedrich"
 
-description:         A Haskell project for demonstrating effectful programming without side effects.
+description:         A Haskell project for demonstrating the Effectful library with Redis, Database, and Logging effects.
 language:            GHC2021
 
 dependencies:
@@ -14,10 +14,18 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+    - base
+    - effectful
+    - effectful-core
+    - containers
+    - hedis
+    - bytestring
+    - text
 
 executables:
-  effectful-without-side-effects-exe:
+  purely-effectful-exe:
     main: Main.hs
     source-dirs: app
     dependencies:
-      - effectful-without-side-effects
+      - purely-effectful

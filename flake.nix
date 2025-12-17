@@ -15,7 +15,7 @@
             final.haskell-nix.stackProject' {
              src = {
                 outPath = ./.;
-                name = "effectful-without-side-effects";
+                name = "purely-effectful";
               };
               
               #compiler-nix-name = "ghc9103";
@@ -44,6 +44,6 @@
       };
     in flake // {
       # Built by `nix build .`
-      packages.default = flake.packages."effectful-without-side-effects:exe:effectful-without-side-effects-exe";
+      packages.default = flake.packages."purely-effectful:exe:purely-effectful-exe";
     });
 }
