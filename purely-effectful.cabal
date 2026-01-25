@@ -22,6 +22,14 @@ source-repository head
 library
   exposed-modules:
       EffectfulDemo
+      Effects.Cache
+      Effects.Database
+      Effects.Logger
+      Interpreters.Cache.Pure
+      Interpreters.Cache.Redis
+      Interpreters.Database.Simulated
+      Interpreters.Logger.Console
+      Interpreters.Logger.Null
   other-modules:
       Paths_purely_effectful
   hs-source-dirs:
