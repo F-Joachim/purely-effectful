@@ -1,0 +1,28 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+  zipkin/nontls:
+    endpoint: "http://zipkin:9411/api/v2/spans"
+    format: json
+    default_service_name: unknown-service
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, zipkin/nontls]
+  telemetry:
+    logs:
+      output_paths: ["stdout"]
+      error_output_paths: ["stdout"]

@@ -1,0 +1,19 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector:0.144.0
+    environment:
+      - no_proxy=zipkin
+      - NO_PROXY=zipkin
+    ports:
+      - "4317:4317"  # gRPC endpoint for receiving traces
+      - "4318:4318"  # HTTP endpoint for receiving traces
+    volumes:
+      - ./otel-collector-config.yml:/otel-collector-config.yml
+    command: ["--config", "/otel-collector-config.yml"]
+
+  zipkin:
+    container_name: zipkin
+    hostname: zipkin
+    image: openzipkin/zipkin:3.5
+    ports:
+      - "9411:9411"  # Zipkin UI and API

@@ -7,51 +7,70 @@
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
 
-module EffectfulDemo (runProgram) where
+module EffectfulDemo (runProgramWrappedWithTracer) where
 
-import           Data.Text                       (Text)
-import qualified Database.Redis                  as R
-import           Effectful                       (Eff, runEff, (:>))
-import           Effectful.Dispatch.Dynamic      (send)
-import           Effects.Cache                   (Cache (GetCached, SetCached))
-import           Effects.Database                (Database (FetchUserFromDB))
-import           Effects.Logger                  (LogLevel (Error', Info, Warn),
-                                                  Logger (LogMsg))
-import           Interpreters.Cache.Pure         (runCachePure)
-import           Interpreters.Cache.Redis        (runCacheRedis)
-import           Interpreters.Database.Simulated (runDatabaseSim)
-import           Interpreters.Logger.Console     (runLoggerConsole)
+import           Control.Exception                  (bracket)
+import           Data.Text                          (Text)
+import qualified Database.Redis                     as R
+import           Effectful                          (Eff, runEff, (:>))
+import           Effects.Cache                      (Cache (GetCached, SetCached), setCached, getCached)
+import           Effects.Database                   (Database (FetchUserFromDB), fetchUserFromDB)
+import           Effects.Logger                     (LogLevel (Error', Info, Warn),
+                                                     Logger (LogMsg), log)
+import           Effects.Tracing                    (Tracing, inSpan)
+import           Interpreters.Cache.Pure            (runCachePure)
+import           Interpreters.Cache.Redis           (runCacheRedis)
+import           Interpreters.Db.Simulated          (runDatabaseSim)
+import           Interpreters.Logger.Console        (runLoggerConsole)
+import           Interpreters.Tracing.OpenTelemetry (runTracing)
+import           OpenTelemetry.Exporter.OTLP.Span   (loadExporterEnvironmentVariables,
+                                                     otlpExporter)
+import           OpenTelemetry.Processor.Simple     (SimpleProcessorConfig (SimpleProcessorConfig),
+                                                     simpleProcessor)
+import           OpenTelemetry.Trace                (initializeGlobalTracerProvider)
+import           OpenTelemetry.Trace.Core           (Tracer,
+                                                     createTracerProvider,
+                                                     defaultSpanArguments,
+                                                     emptyTracerProviderOptions,
+                                                     getGlobalTracerProvider,
+                                                     getTracer, makeTracer,
+                                                     setGlobalTracerProvider,
+                                                     shutdownTracerProvider,
+                                                     tracerOptions)
+import           Prelude                       hiding (log)
+
 
 
 -- | THE BUSINESS LOGIC
 -- This function is completely decoupled from the implementation details.
 -- It requires the 'Cache' effect and 'IOE' (the ability to run IO).
-fetchUserData :: (Cache :> es, Database :> es, Logger :> es) => Text -> Eff es ()
+fetchUserData :: (Cache :> es, Database :> es, Logger :> es, Tracing :> es) => Text -> Eff es ()
 fetchUserData userId = do
-  send $ LogMsg Info ("Processing request for: " <> userId)
+  inSpan "fetchUserData" defaultSpanArguments $ \_span -> do
+    log Info ("Processing request for: " <> userId)
 
-  maybeCached <- send (GetCached userId)
-  case maybeCached of
-    Just val ->
-      send $ LogMsg Info ("Cache HIT: " <> val)
+    maybeCached <- getCached userId
+    case maybeCached of
+      Just val ->
+        log Info ("Cache HIT: " <> val)
 
-    Nothing -> do
-      send $ LogMsg Warn "Cache MISS. Querying Database..."
-      maybeDbVal <- send (FetchUserFromDB userId)
+      Nothing -> do
+        log Warn "Cache MISS. Querying Database..."
+        maybeDbVal <- fetchUserFromDB userId
 
-      case maybeDbVal of
-        Nothing ->
-          send $ LogMsg Error' "User not found in DB."
-        Just dbVal -> do
-          send $ SetCached userId dbVal
-          send $ LogMsg Info "Cache updated successfully."
+        case maybeDbVal of
+          Nothing ->
+            log Error' "User not found in DB."
+          Just dbVal -> do
+            setCached userId dbVal
+            log Info "Cache updated successfully."
 
-runProgram :: IO ()
-runProgram = do
+runProgram :: Tracer -> IO ()
+runProgram tracer = do
   putStrLn "--- RUNNING WITH MOCK INTERPRETER ---"
-  -- We use runEff to run the final stack.
-  -- Notice we pick 'runCachePure' here.
+
   runEff
+    . runTracing tracer
     . runLoggerConsole
     . runDatabaseSim
     . runCachePure $ do
@@ -68,11 +87,29 @@ runProgram = do
     Left _ -> putStrLn "Skipping Redis demo (Connection failed)"
     Right conn -> do
       runEff
+        . runTracing tracer
         . runLoggerConsole
         . runDatabaseSim
         . runCacheRedis conn $ do
             fetchUserData "Bob"
             fetchUserData "Bob"
+
+runProgramWrappedWithTracer :: IO ()
+runProgramWrappedWithTracer = withTracer $ \tracer -> do
+  runProgram tracer
+  pure ()
+  where
+    withTracer f = bracket
+      -- Install the SDK, pulling configuration from the environment
+      initializeGlobalTracerProvider
+      -- Ensure that any spans that haven't been exported yet are flushed
+      shutdownTracerProvider
+      (\tracerProvider -> do
+        -- Get a tracer so you can create spans
+        tp <- getGlobalTracerProvider
+        let tracer = makeTracer tp "purely-effectful-app" tracerOptions
+        f tracer
+      )
 
 -- Helper to safely try connecting to Redis for the demo
 tryConnect :: IO (Either R.Reply R.Connection)

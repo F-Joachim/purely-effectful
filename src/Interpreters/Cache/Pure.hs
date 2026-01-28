@@ -10,7 +10,7 @@ import           Data.Text                    as T (Text, unpack)
 import           Effectful                    (Eff, IOE, (:>))
 import           Effectful.Dispatch.Dynamic   (interpret, reinterpret, send)
 import           Effectful.State.Static.Local (State, evalState, get, modify)
-import           Effects.Cache                (Cache (..))
+import           Effects.Cache                (Cache (GetCached, SetCached))
 
 runCachePure :: (IOE :> es) => Eff (Cache : es) a -> Eff es a
 runCachePure = reinterpret (evalState @(M.Map Text Text) M.empty) $ \_ -> \case

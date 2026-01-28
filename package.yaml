@@ -16,12 +16,21 @@ library:
   source-dirs: src
   dependencies:
     - base
+    - bytestring
+    - containers
     - effectful
     - effectful-core
-    - containers
     - hedis
-    - bytestring
+    - hs-opentelemetry-sdk
+    - hs-opentelemetry-propagator-b3
+    - hs-opentelemetry-propagator-datadog
+    - hs-opentelemetry-api
+    - hs-opentelemetry-exporter-otlp
+    - hs-opentelemetry-otlp
+    - hs-opentelemetry-propagator-w3c
     - text
+    - thread-utils-context
+    - thread-utils-finalizers
 
 executables:
   purely-effectful-exe:
@@ -29,3 +38,5 @@ executables:
     source-dirs: app
     dependencies:
       - purely-effectful
+    ghc-options:
+      - -threaded

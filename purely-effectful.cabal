@@ -25,11 +25,13 @@ library
       Effects.Cache
       Effects.Database
       Effects.Logger
+      Effects.Tracing
       Interpreters.Cache.Pure
       Interpreters.Cache.Redis
-      Interpreters.Database.Simulated
+      Interpreters.Db.Simulated
       Interpreters.Logger.Console
       Interpreters.Logger.Null
+      Interpreters.Tracing.OpenTelemetry
   other-modules:
       Paths_purely_effectful
   hs-source-dirs:
@@ -41,7 +43,16 @@ library
     , effectful
     , effectful-core
     , hedis
+    , hs-opentelemetry-api
+    , hs-opentelemetry-exporter-otlp
+    , hs-opentelemetry-otlp
+    , hs-opentelemetry-propagator-b3
+    , hs-opentelemetry-propagator-datadog
+    , hs-opentelemetry-propagator-w3c
+    , hs-opentelemetry-sdk
     , text
+    , thread-utils-context
+    , thread-utils-finalizers
   default-language: GHC2021
 
 executable purely-effectful-exe
@@ -50,6 +61,7 @@ executable purely-effectful-exe
       Paths_purely_effectful
   hs-source-dirs:
       app
+  ghc-options: -threaded
   build-depends:
       base >=4.7 && <5
     , purely-effectful

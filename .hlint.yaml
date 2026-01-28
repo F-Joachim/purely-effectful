@@ -1,0 +1,21 @@
+# Disable all extensions by default
+# And only add extensions that are needed and not part of GHC2024
+- extensions:
+  - default: false
+  - name:
+    - AllowAmbiguousTypes
+    - DeriveAnyClass
+    - DuplicateRecordFields
+    - ImpredicativeTypes
+    - OverloadedStrings
+    - QuasiQuotes
+    - RecordWildCards
+    - TemplateHaskell
+    - TypeFamilies
+
+#- group: {name: partial, enabled: true}
+- group: {name: generalise, enabled: true}
+- group: {name: generalise-for-conciseness, enabled: true}
+- group: {name: future, enabled: true}
+- group: {name: dollar, enabled: true}
+- group: {name: monomorphic, enabled: true}

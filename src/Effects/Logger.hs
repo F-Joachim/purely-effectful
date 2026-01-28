@@ -1,12 +1,13 @@
 {-# LANGUAGE DataKinds    #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Effects.Logger where
+module Effects.Logger (Logger(LogMsg), LogLevel (Error', Info, Warn), log) where
 
 import           Data.Text                  (Text)
 import           Effectful                  (Dispatch (Dynamic), DispatchOf,
                                              Eff, Effect, (:>))
 import           Effectful.Dispatch.Dynamic (send)
+import           Prelude                    hiding (log)
 
 -- | The Logger effect definition
 data Logger :: Effect where

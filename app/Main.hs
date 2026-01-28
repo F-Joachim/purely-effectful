@@ -1,6 +1,6 @@
 module Main(main) where
 
-import EffectfulDemo (runProgram)
+import EffectfulDemo (runProgramWrappedWithTracer)
 
 main :: IO ()
-main = runProgram
+main = runProgramWrappedWithTracer

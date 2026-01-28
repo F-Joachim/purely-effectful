@@ -55,7 +55,7 @@ Using Stack:
 
 [source,shell]
 ----
-stack build
+stack --system-ghc --no-nix build
 stack exec purely-effectful-exe
 ----
 
@@ -72,7 +72,7 @@ Or with a Nix dev shell:
 [source,shell]
 ----
 nix develop
-stack build
+stack --system-ghc --no-nix build
 stack exec purely-effectful-exe
 ----
 

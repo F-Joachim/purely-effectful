@@ -3,10 +3,73 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: hs-opentelemetry-sdk-0.1.0.1@sha256:54c92cc73e4f52730f38b8c5e5dfc0f29faadc90fa1c5d60529770b882ab08f0,4059
+    pantry-tree:
+      sha256: fa287266bfcd1bc305e6e6b2c49eb1bdcde3bf4b739ae58508a0070590d5b085
+      size: 1935
+  original:
+    hackage: hs-opentelemetry-sdk-0.1.0.1
+- completed:
+    hackage: hs-opentelemetry-propagator-b3-0.0.1.3@sha256:effc04fcb6c8176cedf1bfa6c088f9d930bca42262589bab25a61238305b25a0,1340
+    pantry-tree:
+      sha256: c6da5ca675561d4760af338255ad117b7f8a40fc247f3c7b6f025159ba03a979
+      size: 432
+  original:
+    hackage: hs-opentelemetry-propagator-b3-0.0.1.3
+- completed:
+    hackage: hs-opentelemetry-propagator-datadog-0.0.1.1@sha256:eea1d919c3dde97d6ae4c72b978719758ba1b58facb6b7efd32b81c3815d4bf8,2950
+    pantry-tree:
+      sha256: be13b66c86aaff0cfce5991ff268e2bcd4d81cfb9b3a6fd088c7586d851e144a
+      size: 730
+  original:
+    hackage: hs-opentelemetry-propagator-datadog-0.0.1.1
+- completed:
+    hackage: hs-opentelemetry-api-0.3.0.0@sha256:d864e4e1758bdeb8310d99e18084b77cff875a7b56589db55dfaf1dd17864dd3,4162
+    pantry-tree:
+      sha256: 6b4a51fda23eccb2ff6903e166328bb5c85012bd24cf24d10778ee964d80b542
+      size: 4630
+  original:
+    hackage: hs-opentelemetry-api-0.3.0.0
+- completed:
+    hackage: hs-opentelemetry-exporter-otlp-0.1.0.1@sha256:8d03868dc7c0e5eab61b399ed3150cc24650d84000fd32554b2b4336f7879b53,1564
+    pantry-tree:
+      sha256: f5035b89bd0fe3f129f5e5581d236d41249f517d8527c62cf8ad7a40191f3c43
+      size: 511
+  original:
+    hackage: hs-opentelemetry-exporter-otlp-0.1.0.1
+- completed:
+    hackage: hs-opentelemetry-otlp-0.1.1.0@sha256:30b10c2f5bf8c008f0e64602ec1d8e480f66d906cbe7e150547ec3a14805fbb3,2991
+    pantry-tree:
+      sha256: e7bd8d521587aab0c26c4cd98168a7f9e61858b180fbc9cbb3484ce0b865a84e
+      size: 3284
+  original:
+    hackage: hs-opentelemetry-otlp-0.1.1.0
+- completed:
+    hackage: hs-opentelemetry-propagator-w3c-0.1.0.0@sha256:2d8d324e61e15953d6fa405eee2f674746b5ea35a74ff9113388f0dca21e9f23,2012
+    pantry-tree:
+      sha256: b225fbceee920c7e2334b14a5a4e9a9db3292e73fcc480f58aa6b30bbd4383f4
+      size: 775
+  original:
+    hackage: hs-opentelemetry-propagator-w3c-0.1.0.0
+- completed:
+    hackage: thread-utils-context-0.3.0.4@sha256:e763da1c6cab3b6d378fb670ca74aa9bf03c9b61b6fcf7628c56363fb0e3e71e,1671
+    pantry-tree:
+      sha256: 57d909a991b5e0b4c7a28121cb52ee9c2db6c09e0419b89af6c82fae52be88d4
+      size: 397
+  original:
+    hackage: thread-utils-context-0.3.0.4
+- completed:
+    hackage: thread-utils-finalizers-0.1.1.0@sha256:24944b71d9f1d01695a5908b4a3b44838fab870883114a323336d537995e0a5b,1381
+    pantry-tree:
+      sha256: 8c2c2e2e22c20bf3696ee6f30b50b3a9eeae187a22beb536441eefb0a3f9c549
+      size: 400
+  original:
+    hackage: thread-utils-finalizers-0.1.1.0
 snapshots:
 - completed:
-    sha256: 7e724f347d5969cb5e8dde9f9aae30996e3231c29d1dafd45f21f1700d4c4fcb
-    size: 684460
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/23/28.yaml
-  original: lts-23.28
+    sha256: b7dc388c75a62a8a2f1ac753f3bfc3f43a3a2cb58d8a920272cc9a049ff76c62
+    size: 726792
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/29.yaml
+  original: lts-24.29
