@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds    #-}
+{-# LANGUAGE LambdaCase   #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE LambdaCase #-}
 
 module Effects.Tracing
   ( Tracing (..),
@@ -8,25 +8,19 @@ module Effects.Tracing
   )
 where
 
-import           Control.Monad.IO.Class     (liftIO)
+import           Data.Kind                  (Type)
 import           Data.Text                  (Text)
 import           Effectful                  (Dispatch (Dynamic), DispatchOf,
-                                             Eff, Effect, IOE, MonadIO (liftIO),
-                                             MonadUnliftIO (withRunInIO),
-                                             UnliftStrategy (SeqUnlift),
-                                             type (:>))
-import           Effectful.Dispatch.Dynamic (HasCallStack, interpret,
-                                             localUnlift, localUnliftIO,
-                                             reinterpret, send)
-import           Effectful.Internal.Monad   (withEffToIO)
-import           OpenTelemetry.Trace.Core   (Span, SpanArguments, Tracer,
-                                             getTracer, inSpan'')
+                                             Eff, Effect, type (:>))
+import           Effectful.Dispatch.Dynamic (HasCallStack, send)
+import           OpenTelemetry.Trace.Core   (Span, SpanArguments)
 
 -- | The Tracing effect definition
+type Tracing :: (Type -> Type) -> Type -> Type
 data Tracing :: Effect where
   InSpan :: Text -> SpanArguments -> (Span -> m a) -> Tracing m a
 
-type instance DispatchOf Tracing = Dynamic
+type instance DispatchOf Tracing = 'Dynamic
 
 -- | The effectful operation to create a new span
 inSpan :: (HasCallStack, Tracing :> es) => Text -> SpanArguments -> (Span -> Eff es a) -> Eff es a

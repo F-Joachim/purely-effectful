@@ -7,14 +7,16 @@ import           Data.Text                  (Text)
 import           Effectful                  (Dispatch (Dynamic), DispatchOf,
                                              Eff, Effect, (:>))
 import           Effectful.Dispatch.Dynamic (send)
+import Data.Kind (Type)
 
 -- | The Cache effect definition.
+type Cache :: (Type -> Type) -> Type -> Type
 data Cache :: Effect where
   GetCached :: Text -> Cache m (Maybe Text)
   SetCached :: Text -> Text -> Cache m ()
 
 -- | Type family for dispatching the Cache effect.
-type instance DispatchOf Cache = Dynamic
+type instance DispatchOf Cache = 'Dynamic
 
 -- | Helper function to get a cached value.
 getCached :: (Cache :> es) => Text -> Eff es (Maybe Text)

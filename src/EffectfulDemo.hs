@@ -1,9 +1,7 @@
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE GADTs             #-}
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
 
@@ -13,33 +11,27 @@ import           Control.Exception                  (bracket)
 import           Data.Text                          (Text)
 import qualified Database.Redis                     as R
 import           Effectful                          (Eff, runEff, (:>))
-import           Effects.Cache                      (Cache (GetCached, SetCached), setCached, getCached)
-import           Effects.Database                   (Database (FetchUserFromDB), fetchUserFromDB)
+import           Effects.Cache                      (Cache, getCached,
+                                                     setCached)
+import           Effects.Database                   (Database, fetchUserFromDB)
 import           Effects.Logger                     (LogLevel (Error', Info, Warn),
-                                                     Logger (LogMsg), log)
+                                                     Logger, log)
 import           Effects.Tracing                    (Tracing, inSpan)
 import           Interpreters.Cache.Pure            (runCachePure)
 import           Interpreters.Cache.Redis           (runCacheRedis)
 import           Interpreters.Db.Simulated          (runDatabaseSim)
 import           Interpreters.Logger.Console        (runLoggerConsole)
 import           Interpreters.Tracing.OpenTelemetry (runTracing)
-import           OpenTelemetry.Exporter.OTLP.Span   (loadExporterEnvironmentVariables,
-                                                     otlpExporter)
-import           OpenTelemetry.Processor.Simple     (SimpleProcessorConfig (SimpleProcessorConfig),
-                                                     simpleProcessor)
 import           OpenTelemetry.Trace                (initializeGlobalTracerProvider)
 import           OpenTelemetry.Trace.Core           (Tracer,
-                                                     createTracerProvider,
                                                      defaultSpanArguments,
-                                                     emptyTracerProviderOptions,
                                                      getGlobalTracerProvider,
-                                                     getTracer, makeTracer,
-                                                     setGlobalTracerProvider,
+                                                     makeTracer,
                                                      shutdownTracerProvider,
                                                      tracerOptions)
-import           Prelude                       hiding (log)
+import           Prelude                            hiding (log)
 
-
+-- >>> 5 + 5
 
 -- | THE BUSINESS LOGIC
 -- This function is completely decoupled from the implementation details.
@@ -104,7 +96,7 @@ runProgramWrappedWithTracer = withTracer $ \tracer -> do
       initializeGlobalTracerProvider
       -- Ensure that any spans that haven't been exported yet are flushed
       shutdownTracerProvider
-      (\tracerProvider -> do
+      (\_ -> do
         -- Get a tracer so you can create spans
         tp <- getGlobalTracerProvider
         let tracer = makeTracer tp "purely-effectful-app" tracerOptions
@@ -115,5 +107,5 @@ runProgramWrappedWithTracer = withTracer $ \tracer -> do
 tryConnect :: IO (Either R.Reply R.Connection)
 tryConnect = do
   conn <- R.connect R.defaultConnectInfo
-  R.runRedis conn R.ping -- Ping to check connection
+  _ <- R.runRedis conn R.ping -- Ping to check connection
   return (Right conn)
