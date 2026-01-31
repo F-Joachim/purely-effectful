@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs      #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Interpreters.Logger.Null where
+module Interpreters.Logger.Null (runLoggerNull) where
 
 import           Effectful                  (Eff)
 import           Effectful.Dispatch.Dynamic (interpret)

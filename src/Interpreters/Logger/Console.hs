@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs      #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Interpreters.Logger.Console where
+module Interpreters.Logger.Console (runLoggerConsole) where
 
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.Text                  as T (unpack)

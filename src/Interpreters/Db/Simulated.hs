@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs      #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Interpreters.Db.Simulated where
+module Interpreters.Db.Simulated (runDatabaseSim) where
 
 import           Control.Concurrent         (threadDelay)
 import           Control.Monad.IO.Class     (liftIO)

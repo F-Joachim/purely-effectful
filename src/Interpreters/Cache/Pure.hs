@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs      #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Interpreters.Cache.Pure where
+module Interpreters.Cache.Pure (runCachePure) where
 
 import           Control.Monad.IO.Class       (liftIO)
 import qualified Data.Map.Strict              as M
