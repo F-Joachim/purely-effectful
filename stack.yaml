@@ -75,3 +75,6 @@ extra-deps:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+
+ghc-options: 
+  "$locals": -haddock -fwrite-ide-info -ddump-to-file -ddump-hi -Werror -Weverything -Wno-implicit-prelude  -Wno-unsafe -Wno-missing-import-lists -Wno-missing-local-signatures -Wno-safe -Wno-missing-safe-haskell-mode -Wno-prepositive-qualified-module -Wno-missing-role-annotations
