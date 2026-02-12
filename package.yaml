@@ -7,7 +7,7 @@ maintainer:          "49515773+F-Joachim@users.noreply.github.com"
 copyright:           "2026 Joachim Friedrich"
 
 description:         A Haskell project for demonstrating the Effectful library with Redis, Database, and Logging effects.
-language:            GHC2021
+language:            GHC2024
 
 dependencies:
   - base >=4.7 && <5

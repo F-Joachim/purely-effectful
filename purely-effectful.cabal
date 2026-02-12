@@ -53,7 +53,7 @@ library
     , text
     , thread-utils-context
     , thread-utils-finalizers
-  default-language: GHC2021
+  default-language: GHC2024
 
 executable purely-effectful-exe
   main-is: Main.hs
@@ -65,4 +65,4 @@ executable purely-effectful-exe
   build-depends:
       base >=4.7 && <5
     , purely-effectful
-  default-language: GHC2021
+  default-language: GHC2024
